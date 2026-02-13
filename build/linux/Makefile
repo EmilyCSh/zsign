@@ -24,6 +24,7 @@ SRCS = $(wildcard ../../src/*.cpp) $(wildcard ../../src/common/*.cpp)
 OBJS = $(SRCS:../../src/%.cpp=$(OBJDIR)/%.o)
 
 TARGET = $(BINDIR)/zsign
+LIBTARGET = $(OBJDIR)/libzsign.a
 
 all: $(TARGET)
 	@$(ECHO) "$(GREEN)>>> Build OK!$(NC) -> $(abspath $(TARGET))"
@@ -31,6 +32,13 @@ all: $(TARGET)
 $(TARGET): $(OBJS)
 	@mkdir -p $(BINDIR)
 	$(CXX) $(OBJS) $(LIBS) -o $(TARGET)
+
+.PHONY: lib
+lib: $(LIBTARGET)
+
+$(LIBTARGET): $(OBJS)
+	@mkdir -p $(BINDIR)
+	ar rcs $@ $(OBJS)
 
 $(OBJDIR)/%.o: ../../src/%.cpp
 	@mkdir -p $(dir $@)
